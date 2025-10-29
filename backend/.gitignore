@@ -68,3 +68,4 @@ tmp/
 # Other
 *.tgz
 *.tar.gz
+.vercel
