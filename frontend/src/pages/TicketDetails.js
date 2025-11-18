@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
+import API_BASE_URL from '../config/api';
 
 function CommentForm({ ticketId, onCommentAdded }) {
   const [comment, setComment] = useState('');
@@ -19,7 +20,7 @@ function CommentForm({ ticketId, onCommentAdded }) {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post(
-        `https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${ticketId}/comment`,
+        `${API_BASE_URL}/ticket/${ticketId}/comment`,
         { text: comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -66,7 +67,7 @@ function TicketDetails() {
     const fetchTicket = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${id}`, {
+        const res = await axios.get(`${API_BASE_URL}/ticket/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -210,7 +211,7 @@ function TicketDetails() {
 
               try {
                 const token = localStorage.getItem('token');
-                await axios.delete(`https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${ticket._id}`, {
+                await axios.delete(`${API_BASE_URL}/ticket/${ticket._id}`, {
                   headers: { Authorization: `Bearer ${token}` },
                 });
                 alert('Ticket deleted successfully');

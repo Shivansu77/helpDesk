@@ -9,6 +9,3 @@ async function connectDb(){
     }
 }
 connectDb();
-
-//shivansubisht77_db_user
-//jJvnEUNMzc9LCiLc

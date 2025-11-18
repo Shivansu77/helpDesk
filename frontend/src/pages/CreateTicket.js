@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 function CreateTicket() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function CreateTicket() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/add-ticket', form, {
+      await axios.post(`${API_BASE_URL}/ticket/add-ticket`, form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 function Register() {
   const [form, setForm] = useState({
@@ -32,7 +33,7 @@ function Register() {
       };
 
       console.log('Attempting registration with:', { email: payload.email, role: payload.role });
-      const response = await axios.post('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/user/register', payload);
+      const response = await axios.post(`${API_BASE_URL}/user/register`, payload);
       console.log('Registration response:', response.data);
       
       setSuccess('Account created successfully! Redirecting to login...');
@@ -141,10 +142,10 @@ function Register() {
             type="submit"
             disabled={loading}
             className={`w-full py-2 px-4 rounded-md text-white transition duration-150 focus:outline-none focus:ring-2 
-                        focus:ring-offset-2 focus:ring-blur-500 
+                        focus:ring-offset-2 focus:ring-blue-500 
                         ${loading
                 ? 'bg-green-300 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-500 to-black-700 hover:from-red-600 hover:to-red-800 active:scale-95'
+                : 'bg-gradient-to-r from-blue-500 to-blue-700 hover:from-red-600 hover:to-red-800 active:scale-95'
               }`}
           >
             {loading ? 'Registering...' : 'Create Account'}

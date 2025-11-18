@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 function EditTicket() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ function EditTicket() {
     const fetchTicket = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${id}`, {
+        const res = await axios.get(`${API_BASE_URL}/ticket/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const ticketData = res.data.ticket || res.data;
@@ -38,7 +39,7 @@ function EditTicket() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${id}`, {
+      await axios.put(`${API_BASE_URL}/ticket/${id}`, {
         title, priority, description, status
       }, {
         headers: { Authorization: `Bearer ${token}` }

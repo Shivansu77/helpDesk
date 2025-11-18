@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 function Login(){
     const [form, setForm] = useState({email: '', password: ''});
@@ -14,7 +15,7 @@ function Login(){
         setError('');
         try {
             console.log('Attempting login with:', { email: form.email });
-            const response = await axios.post('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/user/login', form);
+            const response = await axios.post(`${API_BASE_URL}/user/login`, form);
             console.log('Login response:', response.data);
             localStorage.setItem('token', response.data.token);
             navigate('/dashboard');
