@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import API_BASE_URL from '../config/api';
 
 function CommentForm({ ticketId, onCommentAdded }) {
   const [comment, setComment] = useState('');
@@ -19,7 +20,7 @@ function CommentForm({ ticketId, onCommentAdded }) {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/${ticketId}/comment`,
+        `${API_BASE_URL}/ticket/${ticketId}/comment`,
         { text: comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -86,13 +87,13 @@ function Dashboard() {
         const headers = { Authorization: `Bearer ${token}` };
         
         // Fetch ticket stats
-        const statsRes = await axios.get('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/stats', { headers });
+        const statsRes = await axios.get(`${API_BASE_URL}/ticket/stats`, { headers });
         if (isMounted) {
           setTicketStats(statsRes.data);
         }
 
         // Fetch all tickets
-        const ticketsRes = await axios.get('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/ticket/all-tickets', { headers });
+        const ticketsRes = await axios.get(`${API_BASE_URL}/ticket/all-tickets`, { headers });
         if (isMounted) {
           const tickets = ticketsRes.data.tickets || [];
           setGetAllTickets(tickets);

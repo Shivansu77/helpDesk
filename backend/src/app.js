@@ -18,18 +18,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Unhandled error:', err);
-    res.status(500).json({ message: 'Internal server error', error: err.message });
-});
-
 app.use('/ticket',ticketRouter);
 app.use('/user', userRouter);
 
-// 404 handler
+// 404 handler - must come before error handling
 app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
+});
+
+// Error handling middleware - must be last
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ message: 'Internal server error', error: err.message });
 });
 
 app.listen(PORT, () => {

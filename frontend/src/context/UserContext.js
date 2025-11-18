@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 export const UserContext = createContext();
 
@@ -15,7 +16,7 @@ export const UserProvider = ({ children }) => {
           return;
         }
 
-        const res = await axios.get('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/user/me', {
+        const res = await axios.get(`${API_BASE_URL}/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
