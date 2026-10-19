@@ -1,5 +1,10 @@
 # HelpDesk Application
 
+## CSE494 submission
+
+- Live project: https://cse494-helpdesk.vercel.app
+- Backend API: https://backend-psi-puce-30.vercel.app
+
 A full-stack helpdesk ticket management system with role-based access control.
 
 ## Features
@@ -9,6 +14,8 @@ A full-stack helpdesk ticket management system with role-based access control.
 - **Ticket Management**: Create, view, edit, delete tickets
 - **Comments System**: Admin-only commenting on tickets
 - **Search & Filter**: Filter tickets by status, priority, and search
+- **MongoDB aggregation**: Dashboard statistics are grouped with a MongoDB `$match` + `$group` pipeline
+- **Validation**: Mongoose schema validation plus request-level validation for users, tickets, and comments
 - **Responsive Design**: Mobile-friendly interface
 
 ## Tech Stack

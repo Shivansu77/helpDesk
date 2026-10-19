@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { API_URL } from '../api';
 
 function Register() {
   const [form, setForm] = useState({
@@ -32,7 +33,7 @@ function Register() {
       };
 
       console.log('Attempting registration with:', { email: payload.email, role: payload.role });
-      const response = await axios.post('https://help-desk-f75w0dmof-shivansu77s-projects.vercel.app/user/register', payload);
+      const response = await axios.post(`${API_URL}/user/register`, payload);
       console.log('Registration response:', response.data);
       
       setSuccess('Account created successfully! Redirecting to login...');

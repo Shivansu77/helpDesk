@@ -2,10 +2,28 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { generateToken } = require('../jwt');
 
+const validEmail = (email) => typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 // Register a new user
 const registerUser = async (req, res) => {
     try {
         const { name, email, age, password, role } = req.body;
+
+        if (!name || name.trim().length < 2) {
+            return res.status(400).json({ message: 'Name must contain at least 2 characters' });
+        }
+        if (!validEmail(email)) {
+            return res.status(400).json({ message: 'Please enter a valid email' });
+        }
+        if (typeof password !== 'string' || password.length < 8) {
+            return res.status(400).json({ message: 'Password must contain at least 8 characters' });
+        }
+        if (age !== undefined && age !== '' && (!Number.isFinite(Number(age)) || Number(age) < 0)) {
+            return res.status(400).json({ message: 'Age must be a positive number' });
+        }
+        if (role && !['user', 'admin'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role' });
+        }
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });

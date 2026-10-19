@@ -1,8 +1,22 @@
 const Ticket = require('../models/ticket');
 
+const allowedPriorities = ['Low', 'Medium', 'High'];
+const allowedStatuses = ['Open', 'In Progress', 'Resolved', 'Closed'];
+const isValidationError = (error) => ['ValidationError', 'CastError'].includes(error?.name);
+
 const createTicket = async (req, res) => {
     try {
-        const { title, priority, description } = req.body;
+       const { title, priority, description } = req.body;
+
+        if (!title || title.trim().length < 3) {
+            return res.status(400).json({ message: 'Title must contain at least 3 characters' });
+        }
+        if (priority && !allowedPriorities.includes(priority)) {
+            return res.status(400).json({ message: 'Invalid priority' });
+        }
+        if (description && description.trim().length > 2000) {
+            return res.status(400).json({ message: 'Description cannot exceed 2000 characters' });
+        }
         
        const ticket = new Ticket({
         title,
@@ -16,7 +30,7 @@ const createTicket = async (req, res) => {
         res.status(201).json({ message: 'Ticket created successfully', ticket });
     } catch (error) {
         console.error('Error creating ticket:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(isValidationError(error) ? 400 : 500).json({ message: isValidationError(error) ? error.message : 'Internal Server Error' });
     }
 };
 
@@ -75,6 +89,15 @@ const getTicketById = async (req, res) => {
 const updateTicket = async (req, res) => {
     try {
         const { title, priority, description, status } = req.body;
+        if (!title || title.trim().length < 3) {
+            return res.status(400).json({ message: 'Title must contain at least 3 characters' });
+        }
+        if (priority && !allowedPriorities.includes(priority)) {
+            return res.status(400).json({ message: 'Invalid priority' });
+        }
+        if (status && !allowedStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
         const ticket = await Ticket.findOneAndUpdate(
             { _id: req.params.id, user: req.user.userId },
             { title, priority, description, status },
@@ -88,7 +111,7 @@ const updateTicket = async (req, res) => {
         res.json({ message: 'Ticket updated successfully', ticket });
     } catch (error) {
         console.error('Error updating ticket:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(isValidationError(error) ? 400 : 500).json({ message: isValidationError(error) ? error.message : 'Internal Server Error' });
     }
 };
 const addCommentToTicket = async (req, res) => {
@@ -99,6 +122,9 @@ const addCommentToTicket = async (req, res) => {
         }
         
         const { text } = req.body;
+        if (!text || text.trim().length < 2 || text.trim().length > 1000) {
+            return res.status(400).json({ message: 'Comment must contain 2 to 1000 characters' });
+        }
         const ticket = await Ticket.findById(req.params.id);
         
         if (!ticket) {
@@ -130,13 +156,16 @@ const getTicketStats = async (req, res) => {
       filter.user = req.user.userId;
     }
 
-    const [total, open, inProgress, resolved, closed] = await Promise.all([
-      Ticket.countDocuments(filter),
-      Ticket.countDocuments({ ...filter, status: 'Open' }),
-      Ticket.countDocuments({ ...filter, status: 'In Progress' }),
-      Ticket.countDocuments({ ...filter, status: 'Resolved' }),
-      Ticket.countDocuments({ ...filter, status: 'Closed' })
+    const groupedStats = await Ticket.aggregate([
+      { $match: filter },
+      { $group: { _id: '$status', count: { $sum: 1 } } }
     ]);
+    const counts = Object.fromEntries(groupedStats.map(({ _id, count }) => [_id, count]));
+    const total = groupedStats.reduce((sum, item) => sum + item.count, 0);
+    const open = counts.Open || 0;
+    const inProgress = counts['In Progress'] || 0;
+    const resolved = counts.Resolved || 0;
+    const closed = counts.Closed || 0;
 
     res.status(200).json({ 
       total, open, inProgress, resolved, closed,

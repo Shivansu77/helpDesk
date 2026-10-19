@@ -19,12 +19,12 @@
    - Go to [vercel.com](https://vercel.com)
    - Import your backend repository
    - Set environment variables:
-     - `MONGO_URL`: `mongodb+srv://shivansu77:%40Shark77@cluster0.nh0wxfn.mongodb.net`
+     - `MONGO_URL`: Your MongoDB Atlas connection string
      - `DB_NAME`: `helpdesk`
      - `JWT_SECRET`: `your-secure-jwt-secret-key`
    - Deploy
 
-### 2. Frontend Deployment (Netlify)
+### 2. Frontend Deployment (Vercel)
 
 1. **Update API URLs**:
    - Replace `http://localhost:8000` with your Vercel backend URL in all frontend files
@@ -41,11 +41,11 @@
    git push -u origin main
    ```
 
-3. **Deploy to Netlify**:
-   - Go to [netlify.com](https://netlify.com)
+3. **Deploy to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
    - Import your frontend repository
    - Build settings: `npm run build`
-   - Publish directory: `build`
+   - Output directory: `build`
    - Deploy
 
 ### 3. Update Frontend API URLs
@@ -64,7 +64,7 @@ Replace `http://localhost:8000` with `https://your-backend.vercel.app`
 
 ### 4. Test Deployment
 
-1. Visit your Netlify frontend URL
+1. Visit your Vercel frontend URL
 2. Register a new user
 3. Create tickets
 4. Test all functionality

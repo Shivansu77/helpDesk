@@ -1,5 +1,5 @@
-const jwt=require('jsonwebtoken');
-const CS_SECRET_KEY='CS_SECRET_KEY';
+const jwt = require('jsonwebtoken');
+const CS_SECRET_KEY = process.env.JWT_SECRET || 'development-only-secret';
 
 const generateToken=(payload)=>{
     const token=jwt.sign(payload,CS_SECRET_KEY,{expiresIn:'24h'});

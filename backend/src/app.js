@@ -4,7 +4,7 @@ require('dotenv').config();
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'fallback-secret-key-change-in-production';
 }
-require('./appMongoose');
+const connectDb = require('./appMongoose');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -17,6 +17,16 @@ const ticketRouter = require('./routes/ticketRoutes');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use(async (req, res, next) => {
+    try {
+        await connectDb();
+        next();
+    } catch (error) {
+        console.error('Database connection failed:', error.message);
+        res.status(503).json({ message: 'Database unavailable' });
+    }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -32,8 +42,10 @@ app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
 
 module.exports = app;
